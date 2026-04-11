@@ -4,11 +4,11 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["BlazorInvest.Web/BlazorInvest.Web.csproj", "BlazorInvest.Web/"]
-RUN dotnet restore "BlazorInvest.Web/BlazorInvest.Web.csproj"
+WORKDIR /build
+COPY ["src/BlazorInvest.Web/BlazorInvest.Web.csproj", "src/BlazorInvest.Web/"]
+RUN dotnet restore "src/BlazorInvest.Web/BlazorInvest.Web.csproj"
 COPY . .
-WORKDIR "/src/BlazorInvest.Web"
+WORKDIR "/build/src/BlazorInvest.Web"
 RUN dotnet build "BlazorInvest.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
