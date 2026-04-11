@@ -7,7 +7,6 @@ namespace BlazorInvest.Web.Infrastructure.Extensions;
 
 public static class WebApplicationBuilderExtensions
 {
-    
     public static void RegisterServices(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<InvestApiSettings>(builder.Configuration.GetSection("InvestApi"));
