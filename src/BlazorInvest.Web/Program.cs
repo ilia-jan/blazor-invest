@@ -1,4 +1,4 @@
-using Application.Components;
+using BlazorInvest.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
