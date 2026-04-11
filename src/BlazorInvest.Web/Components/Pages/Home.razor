@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using BlazorInvest.Web.Extensions
 @using BlazorInvest.Web.Models
 @using BlazorInvest.Web.Services.Interfaces
 @inject ICouponsService CouponsService
@@ -6,7 +7,7 @@
 <PageTitle>Hello, invest!</PageTitle>
 @code {
     private IEnumerable<AccountCoupons> _accountCoupons = null!;
-    private int _count = 0;
+    private int _count;
     
     protected override async Task OnInitializedAsync()
     {
@@ -14,12 +15,10 @@
         _count = _accountCoupons.Count();
     }
     
-    // TODO 1 - учет налогов
-    // TODO 2 - в виде таблички с тоталом (лучше - с группировкой по месяцам, типа июнь - такие-то выплаты, июль - такие-то, и т.д)
-    // TODO 3 - сообщение что данных по счету нет (если массив пустой)
-    // TODO 4 - добавь инфо по акциям тоже
+    // TODO добавь инфо по акциям тоже
     // TODO 100500 - фильтры по дате, счету
 }
+
 
 <div class="tab">
     @for (var i = 1; i <= _count; i++)
@@ -31,25 +30,72 @@
 @for (var i = 1; i <= _count; i++)
 {
     <div id="account-@i" class="tabcontent">
-        @foreach (var coupon in _accountCoupons.ElementAt(i-1).Coupons)
-        {
-            <div style="background-color: lightgray;">
-                <p>
-                    <strong>@coupon.Title</strong>
-                </p>
-                <p>
-                    <strong>
-                        @coupon.When.ToString("dd.MM.yyyy")
-                    </strong>
-                </p>
-                <p>@coupon.Quantity купонов по @coupon.Amount = @(coupon.Quantity*coupon.Amount) рублей</p>
-            </div>
+        @{
+            var coupons = _accountCoupons.ElementAt(i - 1).Coupons;
+            if (coupons.Any())
+            {
+                var groupedCoupons = coupons
+                .GroupBy(c => c.When.GetMonthName())
+                .ToDictionary(c => c.Key, c => c.ToArray());
+
+            <table class="table table-hover">
+                <tbody>
+                    @foreach (var grouping in groupedCoupons)
+                    {
+                        var monthTotalTaxed = 0m;
+                        <tr style="background-color: lightgray; text-transform: uppercase">
+                            <td colspan="6" style="text-align: center; font-size: 20px"><strong>@grouping.Key</strong></td>
+                        </tr>
+
+                        @foreach (var coupon in grouping.Value)
+                        {
+                            var subTotal = coupon.Quantity * coupon.Amount;
+                            var subTotalTaxed = subTotal * 0.87m;
+                            monthTotalTaxed += subTotalTaxed;
+
+                            <tr>
+                                <td>
+                                    <strong>
+                                        @coupon.When.ToString("dd.MM.yyyy")
+                                    </strong>
+                                </td>
+                                <td>
+                                    @coupon.Title
+                                </td>
+                                <td>
+                                    @coupon.Quantity
+                                </td>
+                                <td>
+                                    @coupon.Amount
+                                </td>
+                                <td>
+                                    @subTotal
+                                </td>
+                                <td>
+                                    <strong>
+                                        @Math.Round(subTotalTaxed, 2)
+                                    </strong>
+                                </td>
+                            </tr>
+                        }
+                        
+                        <tr>
+                            <td colspan="5" style="text-align: right"><strong>Итого</strong></td>
+                            <td>@Math.Round(monthTotalTaxed, 2)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            }
+            else
+            {
+                <div class="alert alert-info">Нет данных по выплатам</div>
+            }
         }
     </div>
 }
 
 <style>
-    /* Style the tab */
     .tab {
         overflow: hidden;
         border: 1px solid #ccc;
@@ -89,18 +135,18 @@
 <script language="javascript">
     function openAccount(evt, cityName) {
         // Declare all variables
-        var i, tabcontent, tablinks;
+        let i, tabContent, tabLinks;
 
         // Get all elements with class="tabcontent" and hide them
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+        tabContent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = "none";
         }
 
         // Get all elements with class="tablinks" and remove the class "active"
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        tabLinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].className = tabLinks[i].className.replace(" active", "");
         }
 
         // Show the current tab, and add an "active" class to the button that opened the tab
