@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
-      <UserSecretsId>d26137c1-1eec-4cc8-ba9e-f22a03328294</UserSecretsId>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  <UserSecretsId>d26137c1-1eec-4cc8-ba9e-f22a03328294</UserSecretsId>
   </PropertyGroup>
 
     <ItemGroup>
