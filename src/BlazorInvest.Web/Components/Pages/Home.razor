@@ -6,14 +6,13 @@
 
 <PageTitle>Мои портфели</PageTitle>
 @code {
-    private IEnumerable<Account> _accounts = null!;
-    
+    private IEnumerable<Account> _accounts = [];
+
     protected override async Task OnInitializedAsync()
     {
         _accounts = await AccountService.GetActiveAccountsAsync();
     }
 }
-
 @foreach(var account in _accounts)
 {
     <div style="background-color: lightgray; margin: 10px">
