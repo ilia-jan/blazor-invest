@@ -1,5 +1,4 @@
-﻿using BlazorInvest.Web.Services.Implementations;
-using BlazorInvest.Web.Services.Interfaces;
+﻿using BlazorInvest.Web.Services;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 
@@ -27,6 +26,7 @@ public static class WebApplicationBuilderExtensions
                 });
             });
 
-        builder.Services.AddScoped<ICouponsService, CouponsService>();
+        builder.Services.AddScoped<ICouponService, CouponService>();
+        builder.Services.AddScoped<IAccountService, AccountService>();
     }
 }

@@ -1,14 +1,13 @@
 ﻿using System.Collections.Immutable;
 using BlazorInvest.Web.Models;
-using BlazorInvest.Web.Services.Interfaces;
 using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
 using Tinkoff.InvestApi.V1;
 using Coupon = BlazorInvest.Web.Models.Coupon;
 
-namespace BlazorInvest.Web.Services.Implementations;
+namespace BlazorInvest.Web.Services;
 
-public class CouponsService(InvestApiClient investApiClient) : ICouponsService
+public class CouponService(InvestApiClient investApiClient) : ICouponService
 {
     private const string BondInstrumentType = "bond";
 
@@ -21,6 +20,7 @@ public class CouponsService(InvestApiClient investApiClient) : ICouponsService
         var brokerAccounts = accountsResponse.Accounts
             .Where(a => a.Status is AccountStatus.Open && a.Type is AccountType.Tinkoff or AccountType.TinkoffIis)
             .ToArray();
+
         foreach (var account in brokerAccounts)
         {
             var portfolioRequest = new PortfolioRequest { AccountId = account.Id };

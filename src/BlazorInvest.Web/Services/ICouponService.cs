@@ -1,8 +1,8 @@
 ﻿using BlazorInvest.Web.Models;
 
-namespace BlazorInvest.Web.Services.Interfaces;
+namespace BlazorInvest.Web.Services;
 
-public interface ICouponsService
+public interface ICouponService
 {
     Task<IReadOnlyCollection<AccountCoupons>> GetCouponsByAccountsAsync(CancellationToken cancellationToken = default);
 }
